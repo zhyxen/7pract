@@ -1,0 +1,72 @@
+def Open(file_name, mode):
+    try:
+        file = open(file_name, mode, encoding='utf-8')
+    except:
+        print(f"File {file_name} wasn't opened!")
+        return None
+    else:
+        print(f"File {file_name} was opened!")
+        return file
+
+file1_name = "TF8_1.txt"
+file2_name = "TF8_2.txt"
+
+file_1_w = Open(file1_name, "w")
+
+if file_1_w != None:
+    file_1_w.write("Our train, number 789, departs at 10:30.\n")
+    file_1_w.write("We have tickets for seats 45 and 46.\n")
+    file_1_w.write("The journey will take 3 hours and 20 minutes.\n")
+    
+    print(f"Information was succesfully added to {file1_name}!")
+    file_1_w.close();
+    print(f"File {file1_name} was closed!")
+
+file_1_r = Open(file1_name, "r")
+file_2_w = Open(file2_name, "w")
+
+if file_1_r != None and file_2_w != None:
+    content = file_1_r.read()
+    
+    clean_content = ""
+    for char in content:
+        if not char.isdigit():
+            clean_content += char
+            
+    clean_content = clean_content.replace('\n', '')
+            
+    chunk_size = 10
+    line_number = 1
+    
+    for i in range(0, len(clean_content), chunk_size):
+        chunk = clean_content[i:i + chunk_size]
+        
+        if not chunk.strip():
+            continue
+            
+        formatted_line_number = str(line_number).rjust(5)
+        file_2_w.write(f"{formatted_line_number} {chunk}")
+        
+        if i + chunk_size < len(clean_content):
+             file_2_w.write('\n')
+        line_number += 1
+        
+    file_1_r.close()
+    file_2_w.close()
+    print("Files were closed!")
+else:
+    print("Error opening files for processing. Skipping part (b).")
+
+print("New sequence:")
+file_3_r = Open(file2_name, "r")
+
+if file_3_r != None:
+    for line in file_3_r:
+        print(line, end="")
+        
+    print() 
+    
+    file_3_r.close()
+    print(f"File {file2_name} was closed!")
+else:
+    print(f"Could not read {file2_name}.")
